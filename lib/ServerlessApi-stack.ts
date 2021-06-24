@@ -10,10 +10,13 @@ export class ServerlessApiStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    const serverlessLambdaRole = new iam.Role(this,'ServerlessLambdaRole',{
+  const serverlessLambdaRole = new iam.Role(this,'ServerlessLambdaRole',{
       assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
 
-    })
+  })
+    const lambdaRole = new iam.Role(this, "lambdaRole", {
+            assumedBy: new iam.ServicePrincipal("lambda.amazonaws.com")
+        });
 
 
     serverlessLambdaRole.addToPolicy(new iam.PolicyStatement({
@@ -36,4 +39,13 @@ const serverlessApiGateway = new apigateway.LambdaRestApi(this, 'myapi', {
   handler: apiServerlessLambda,
 });
 
-}}
+        const lambdaRestApi = new apigateway.LambdaRestApi(
+            this,
+            "lambdaRestApi",
+            {
+                handler: apiServerlessLambda,
+                restApiName: "lambdaRestApi",
+                description: "This Api is for the people!"
+            }
+        );
+  }}
