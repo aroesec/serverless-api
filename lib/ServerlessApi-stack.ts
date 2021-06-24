@@ -3,18 +3,20 @@ import * as lambda from '@aws-cdk/aws-lambda'
 import * as iam from '@aws-cdk/aws-iam'
 import * as path from 'path'
 import * as s3 from '@aws-cdk/aws-s3'
+import * as apigateway from '@aws-cdk/aws-apigateway'
 
 
 export class ServerlessApiStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    const lambdaRole = new iam.Role(this,'lambdaRole',{
+    const serverlessLambdaRole = new iam.Role(this,'ServerlessLambdaRole',{
       assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
 
     })
 
-    lambdaRole.addToPolicy(new iam.PolicyStatement({
+
+    serverlessLambdaRole.addToPolicy(new iam.PolicyStatement({
       resources:['*'],
       actions: ['lambda:InvokeFunction']
 
@@ -24,9 +26,14 @@ export class ServerlessApiStack extends cdk.Stack {
     const apiServerlessLambda = new lambda.Function(this,'apiServerlessLambda', {
       runtime: lambda.Runtime.PYTHON_3_6,
       handler: 'index.handler',
-      code: lambda.Code.fromAsset(path.join(__dirname,'lambda-handler'))
+      role: serverlessLambdaRole,
+      code: lambda.Code.fromAsset(path.join(__dirname,'../lambda/serverlessLambdaApi')),
+      timeout: cdk.Duration.seconds(400)
     })
     
- 
+  
+const serverlessApiGateway = new apigateway.LambdaRestApi(this, 'myapi', {
+  handler: apiServerlessLambda,
+});
 
 }}
