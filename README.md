@@ -1,4 +1,4 @@
-# Welcome to your CDK TypeScript project!
+# Welcome to my serverless api project utilizing Typescript with the AWS-CDK!
 
 This is a blank project for TypeScript development with CDK.
 
