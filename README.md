@@ -1,4 +1,4 @@
-# Welcome to my serverless api project utilizing Typescript with the AWS-CDK!
+# Welcome to my serverless api project utilizing Typescript with the AWS-CDK! (Deprecated, will be creating a new video soon)
 
 This is a blank project for TypeScript development with CDK.
 
